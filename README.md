@@ -5,19 +5,18 @@ Author: Mukunda Bharatheesha
 ##Description
 sot_robot is a ROS based real time controller which loads 'Stack of Tasks' to perform Hierarchical Task Function based 
 Control
-##Installation on ubuntu-14.04 with ros-indigo
+##Installation on ubuntu-14.04 with ROS Indigo
 
 To install all the packages on ubuntu 14.04 LTS, you should do the following
 steps:
 
   1. install by apt-get (see http://wiki.ros.org/indigo/Installation/Ubuntu)
-    - ros-indigo-desktop-full,
-    - ros-indigo-libccd,
-    - ros-indigo-srdfdom,
-    - urdfdom
-    - urdfdom_headers
-    - ros-indigo-robot_model
+    - ros-indigo-desktop-full
+    - ros-indigo-libccd
+    - ros-indigo-srdfdom
+    - ros-indigo-robot-model
     - ros-indigo-ros-control
+    - ros-indigo-gazebo-ros-control
     - git
     - gfortran
     - libblas-dev
@@ -26,7 +25,6 @@ steps:
     - liblapacke-doc (optional)
     - python-sphinx
     - libbullet-dev
-    - ros-indigo-gazebo-ros-control
         
 
   2. Choose a directory on you file system and define the environment
