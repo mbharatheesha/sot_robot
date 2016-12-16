@@ -1,26 +1,32 @@
 # sot_robot
 
-Author: Nirmal Giftsun
+Author: Mukunda Bharatheesha
 
 ##Description
 sot_robot is a ROS based real time controller which loads 'Stack of Tasks' to perform Hierarchical Task Function based 
 Control
-##Installation on ubuntu-12.04 with ros-hydro
+##Installation on ubuntu-14.04 with ros-indigo
 
-To install all the packages on ubuntu 12.04 LTS, you should do the following
+To install all the packages on ubuntu 14.04 LTS, you should do the following
 steps:
 
-  1. install by apt-get (see http://wiki.ros.org/hydro/Installation/Ubuntu)
-    - ros-hydro-desktop-full,
-    - ros-hydro-pr2-robot,
-    - ros-hydro-libccd,
-    - ros-hydro-srdfdom,
+  1. install by apt-get (see http://wiki.ros.org/indigo/Installation/Ubuntu)
+    - ros-indigo-desktop-full,
+    - ros-indigo-libccd,
+    - ros-indigo-srdfdom,
     - urdfdom
     - urdfdom_headers
-    - ros-hydro-robot_model
-    - ros-hydro-pr2-controllers
-    - ros-hydro-ros-control
+    - ros-indigo-robot_model
+    - ros-indigo-ros-control
     - git
+    - gfortran
+    - libblas-dev
+    - libblas-doc (optional)
+    - liblapacke-dev
+    - liblapacke-doc (optional)
+    - python-sphinx
+    - libbullet-dev
+    - ros-indigo-gazebo-ros-control
         
 
   2. Choose a directory on you file system and define the environment
@@ -30,8 +36,8 @@ steps:
      It is recommanded to set variable DEVEL_DIR in your .bashrc for future use.
 
   3. Copy Config and Makefile from scripts/installation
-      -  wget -O $DEVEL_DIR/config.sh https://raw.githubusercontent.com/nemogiftsun/sot_robot/hydro/script/installation/config.sh
-      -  wget -O $DEVEL_DIR/src/Makefile https://raw.githubusercontent.com/nemogiftsun/sot_robot/hydro/script/installation/Makefile
+      -  wget -O $DEVEL_DIR/config.sh https://raw.githubusercontent.com/nemogiftsun/sot_robot/indigo/script/installation/config.sh
+      -  wget -O $DEVEL_DIR/src/Makefile https://raw.githubusercontent.com/nemogiftsun/sot_robot/indigo/script/installation/Makefile
   
   4. cd into $DEVEL_DIR and type
 
