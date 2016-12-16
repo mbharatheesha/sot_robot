@@ -1,6 +1,7 @@
 # sot_robot
 
-Author: Mukunda Bharatheesha
+Author: Nirmal Giftsun
+Refactored By: Mukunda Bharatheesha
 
 ##Description
 sot_robot is a ROS based real time controller which loads 'Stack of Tasks' to perform Hierarchical Task Function based 
@@ -17,6 +18,7 @@ steps:
     - ros-indigo-robot-model
     - ros-indigo-ros-control
     - ros-indigo-gazebo-ros-control
+    - ros-indigo-realtime-tools
     - git
     - gfortran
     - libblas-dev
