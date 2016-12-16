@@ -19,7 +19,7 @@ BUILD_TYPE=Debug
 # bullet
 # realtime_tools
 
-abstract-robot-dynamics_branch=masterot-
+abstract-robot-dynamics_branch=master
 abstract-robot-dynamics_repository=${LAAS_REPO}
 
 dynamic-graph_branch=master
@@ -65,7 +65,7 @@ sot_robot_branch=hydro
 sot_robot_repository=${NG_REPO}
 
 
-sot_robot.configure.dep: eigen3.install sot-dyninv.install dynamic_graph_bridge.install 
+sot_robot.configure.dep: eigen3.install sot-dyninv.install dynamic_graph_bridge.install
 
 all: sot_robot.install
 
