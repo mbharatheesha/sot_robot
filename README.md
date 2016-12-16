@@ -34,8 +34,8 @@ steps:
      It is recommanded to set variable DEVEL_DIR in your .bashrc for future use.
 
   3. Copy Config and Makefile from scripts/installation
-      -  wget -O $DEVEL_DIR/config.sh https://raw.githubusercontent.com/nemogiftsun/sot_robot/indigo/script/installation/config.sh
-      -  wget -O $DEVEL_DIR/src/Makefile https://raw.githubusercontent.com/nemogiftsun/sot_robot/indigo/script/installation/Makefile
+      -  wget -O $DEVEL_DIR/config.sh https://raw.githubusercontent.com/mbharatheesha/sot_robot/indigo/script/installation/config.sh
+      -  wget -O $DEVEL_DIR/src/Makefile https://raw.githubusercontent.com/mbharatheesha/sot_robot/indigo/script/installation/Makefile
   
   4. cd into $DEVEL_DIR and type
 
