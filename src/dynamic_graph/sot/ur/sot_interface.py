@@ -22,8 +22,7 @@ import time
 
 
 import xml.etree.ElementTree as ET
-file = '/home/nemogiftsun/RobotSoftware/laas/devel/ros/src/sot_robot/src/rqt_rpc/rpc_config.xml'
-#file = '/home/nemogiftsun/laasinstall/devel/ros/src/sot_robot/src/rqt_rpc/rpc_config.xml'
+file = os.environ['DEVEL_DIR']+'/src/sot_robot/src/rqt_rpc/rpc_config.xml'
 
 #usage
 '''
