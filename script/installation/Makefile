@@ -8,6 +8,7 @@ JRL_REPO=https://github.com/jrl-umi3218
 LAAS_REPO=git@github.com:laas
 SOT_REPO=git@github.com:stack-of-tasks
 NG_REPO=git@github.com:nemogiftsun
+MB_REPO=git@github.com:mbharatheesha
 
 SRC_DIR=${DEVEL_DIR}/src
 BUILD_TYPE=Debug
@@ -61,8 +62,8 @@ dynamic_graph_bridge_repository=${NG_REPO}
 dynamic_graph_bridge_msgs_branch=master
 dynamic_graph_bridge_msgs_repository=${SOT_REPO}
 
-sot_robot_branch=hydro
-sot_robot_repository=${NG_REPO}
+sot_robot_branch=indigo
+sot_robot_repository=${MB_REPO}
 
 
 sot_robot.configure.dep: eigen3.install sot-dyninv.install dynamic_graph_bridge.install
