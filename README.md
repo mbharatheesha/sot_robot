@@ -21,6 +21,7 @@ steps:
     - ros-indigo-realtime-tools
     - ros-indigo-pr2-controller-interface
     - ros-indigo-pr2-controller-manager
+    - ros-indigo-control-toolbox
     - git
     - gfortran
     - libblas-dev
