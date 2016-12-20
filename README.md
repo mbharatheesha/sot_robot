@@ -1,6 +1,7 @@
 # sot_robot
 
 Author: Nirmal Giftsun
+
 Refactored By: Mukunda Bharatheesha
 
 ##Description
@@ -64,7 +65,7 @@ steps:
 * Run the following.
       sot.initializeRobot()
       sot.startRobot()
-      sot.posture_feature.posture.feature.value = (0,0,0,0,0,0,0,0,0,0,0,0)
+      sot.setRobotPosture((0,0,0,0,0,0,0,0,0,0,0,0))
 
   The first six elements are x,y,z,r,p,y followed by six joints of the ur5 arm.
 
