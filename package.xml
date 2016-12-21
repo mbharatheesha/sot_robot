@@ -32,6 +32,10 @@
   <build_depend>pr2_mechanism_model</build_depend>
 	<build_depend>rospy</build_depend>
 	<build_depend>rqt_gui_py</build_depend>
+	<build_depend>hardware_interface</build_depend>
+	<build_depend>control_msgs</build_depend>
+	<build_depend>gazebo_ros_control</build_depend>
+	<build_depend>xacro</build_depend>
 
   <run_depend>pr2_controller_interface</run_depend>
   <run_depend>pr2_controller_manager</run_depend>
@@ -40,7 +44,7 @@
   <run_depend>std_srvs</run_depend>
   <run_depend>geometry_msgs</run_depend>
   <run_depend>sensor_msgs</run_depend>
-  <run_depend>tf</run_depend>s
+  <run_depend>tf</run_depend>
   <run_depend>controller_interface</run_depend>
   <run_depend>controller_manager</run_depend>
   <run_depend>control_toolbox</run_depend>
@@ -51,6 +55,10 @@
   <run_depend>urdf</run_depend>
 	<run_depend>rospy</run_depend>
 	<run_depend>rqt_gui_py</run_depend>
+	<run_depend>hardware_interface</run_depend>
+	<run_depend>control_msgs</run_depend>
+	<run_depend>gazebo_ros_control</run_depend>
+	<run_depend>xacro</run_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
