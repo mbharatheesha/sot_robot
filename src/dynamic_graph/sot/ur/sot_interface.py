@@ -1,3 +1,9 @@
+import math
+import time
+import os
+
+import sys
+
 from dynamic_graph.sot.ur.robot import Ur5
 from dynamic_graph.ros.robot_model import RosRobotModel
 from dynamic_graph.sot.core import RobotSimu, FeaturePosition, FeaturePosture, Task, SOT, GainAdaptive, FeatureGeneric
@@ -9,6 +15,7 @@ from dynamic_graph.sot.core.meta_task_6d import toFlags
 from dynamic_graph.sot.dyninv import TaskInequality, TaskJointLimits
 from dynamic_graph.sot.core.meta_tasks_kine import MetaTaskKine6d
 from dynamic_graph.sot.dyninv import SolverKine
+#import rospy
 
 from dynamic_graph.ros import Ros
 from dynamic_graph.entity import PyEntityFactoryClass
@@ -17,8 +24,12 @@ from dynamic_graph.entity import PyEntityFactoryClass
 #from dynamic_graph.sot.hpp import PathSampler 
 
 
-import math
-import time
+
+# MoveIt! related imports for motion planning.
+#import moveit_commander
+#import moveit_msgs.msg
+#import geometry_msgs.msg
+#import tf
 
 
 import xml.etree.ElementTree as ET
@@ -125,8 +136,8 @@ class SOTInterface:
         taskjl = TaskJointLimits('Joint Limits Task')
         plug(self.robot.dynamic.position,taskjl.position)
         taskjl.controlGain.value = 5
-	taskjl.referenceInf.value = inf
-	taskjl.referenceSup.value = sup
+        taskjl.referenceInf.value = inf
+        taskjl.referenceSup.value = sup
         taskjl.dt.value = 1
         return taskjl.name
   
@@ -272,6 +283,28 @@ class SOTInterface:
     def stopRobot(self): 
         self.connectDeviceWithSolver(False) 
         self.status = 'STOPPED'
+
+########## Motion planning with MoveIt! ######################
+#    def planToPosture(self, posture):
+#        print "======Planning to the specified posture using MoveIt!"
+#        robot_object = moveit_commander.RobotCommander()
+#        scene_object = moveit_commander.PlanningSceneInterface()
+#        move_group   = moveit_commander.MoveGroupCommander("manipulator")
+#        print "======The current state of the robot is:"
+#        print robot_object.get_current_state()
+#        print("======Now planning to a specified pose for group %s" % move_group.getName())
+#        desired_pose = geometry_msgs.msg.Pose()
+#        quaternion = tf.transformations.quaternion_from_euler(posture[3], posture[4], posture[5])
+#        desired_pose.position.x = posture[0]
+#        desired_pose.position.y = posture[1]
+#        desired_pose.position.z = posture[2]
+#        desired_pose.orientation.x = quaternion[0]
+#        desired_pose.orientation.y = quaternion[1]
+#        desired_pose.orientation.z = quaternion[2]
+#        desired_pose.orientation.w = quaternion[3]
+#        move_group.set_pose_target(desired_pose)
+#        move_group.set_planner_id("RRTConnectkConfigDefault")
+#        motion_plan = move_group.plan()
 
 
 ############ Trajectory Handler Tools#########################         
