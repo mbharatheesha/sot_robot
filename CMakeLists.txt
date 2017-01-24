@@ -122,4 +122,3 @@ install(PROGRAMS
 message(path ${CMAKE_PREFIX_PATH})
 
 ADD_SUBDIRECTORY(src)
-

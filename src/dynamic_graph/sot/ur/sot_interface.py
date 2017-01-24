@@ -1,9 +1,3 @@
-import math
-import time
-import os
-
-import sys
-
 from dynamic_graph.sot.ur.robot import Ur5
 from dynamic_graph.ros.robot_model import RosRobotModel
 from dynamic_graph.sot.core import RobotSimu, FeaturePosition, FeaturePosture, Task, SOT, GainAdaptive, FeatureGeneric
@@ -15,7 +9,6 @@ from dynamic_graph.sot.core.meta_task_6d import toFlags
 from dynamic_graph.sot.dyninv import TaskInequality, TaskJointLimits
 from dynamic_graph.sot.core.meta_tasks_kine import MetaTaskKine6d
 from dynamic_graph.sot.dyninv import SolverKine
-#import rospy
 
 from dynamic_graph.ros import Ros
 from dynamic_graph.entity import PyEntityFactoryClass
@@ -24,16 +17,13 @@ from dynamic_graph.entity import PyEntityFactoryClass
 #from dynamic_graph.sot.hpp import PathSampler 
 
 
-
-# MoveIt! related imports for motion planning.
-#import moveit_commander
-#import moveit_msgs.msg
-#import geometry_msgs.msg
-#import tf
+import math
+import time
 
 
 import xml.etree.ElementTree as ET
-file = os.environ['DEVEL_DIR']+'/src/sot_robot/src/rqt_rpc/rpc_config.xml'
+file = '/home/nemogiftsun/RobotSoftware/laas/devel/ros/src/sot_robot/src/rqt_rpc/rpc_config.xml'
+#file = '/home/nemogiftsun/laasinstall/devel/ros/src/sot_robot/src/rqt_rpc/rpc_config.xml'
 
 #usage
 '''
@@ -41,6 +31,16 @@ from dynamic_graph.sot.ur.sot_interface import SOTInterface
 test = SOTInterface()
 test.initializeRobot()
 test.startRobot()
+
+from dynamic_graph.sot.core.utils.thread_interruptible_loop import loopInThread,loopShortcuts
+@loopInThread
+
+def inc():
+    test.robot.device.increment(0.01)
+
+runner=inc()
+runner.once()
+[go,stop,next,n]=loopShortcuts(runner)
 '''
 class SOTInterface:
     def __init__(self,device_type='simu'): 
@@ -64,12 +64,16 @@ class SOTInterface:
         self.solver.damping.value =3e-5
         self.status = 'NOT_INITIALIZED'
         self.code = [7,9,13,22,24,28,32]
+        self.initializeRobot()
+        '''
         # file upload
         self.CF_tree = ET.parse(file)
         self.CF_root = self.CF_tree.getroot()
         if (self.CF_root.tag == "Trajectories"):
             self.CF_trajectories = self.CF_root.findall('trajectory')
             self.CF_count = len(self.CF_trajectories)
+        '''
+
 
     def defineBasicTasks(self):
         # 1. DEFINE JOINT LIMIT TASK
@@ -80,12 +84,12 @@ class SOTInterface:
         self.jltaskname = self.defineJointLimitsTask(ll,ul)
 
         # 2. DEFINE BASE/WAIST POSITIONING TASK
-        position = [0,0,0,0,0,0.785]
+        position = [0,0,0,0,0,-0.785]
         self.waisttaskname = self.defineWaistPositionTask(position)
         
         # 3. DEFINE ROBOT POSTURE TASK
         self.robot.device.state.recompute(self.robot.device.state.time)
-        posture = self.robot.device.state.value
+        posture = [0,0,0,0,0,-0.785,5.297316345615761, -4.983172114475046, 4.856191953125, -4.428600915992907, -4.505247814299959, 6.036689290915096]
         #posture[13] = 1.6
         self.posturetaskname = self.defineRobotPostureTask(posture)
     
@@ -111,7 +115,7 @@ class SOTInterface:
 
     def pushBasicTasks(self):
         self.pushTask(self.jltaskname)
-        #self.pushTask(self.waisttaskname)
+        self.pushTask(self.waisttaskname)
         #self.pushTask(self.task_skinsensor.name)
         self.pushTask(self.posturetaskname)
         #self.connectDeviceWithSolver(False)
@@ -136,8 +140,10 @@ class SOTInterface:
         taskjl = TaskJointLimits('Joint Limits Task')
         plug(self.robot.dynamic.position,taskjl.position)
         taskjl.controlGain.value = 5
-        taskjl.referenceInf.value = inf
-        taskjl.referenceSup.value = sup
+        inf[0:6] = [-3,-3,-3,-3,-3,-3]
+        sup[0:6] = [3,3,3,3,3,3]
+	taskjl.referenceInf.value = inf
+	taskjl.referenceSup.value = sup
         taskjl.dt.value = 1
         return taskjl.name
   
@@ -180,16 +186,16 @@ class SOTInterface:
             if dof >= 6:
               self.posture_feature.selectDof(dof,isEnabled)
 
-        task_posture=Task('Posture Task')
-        task_posture.add(self.posture_feature.name)
+        self.task_posture=Task('Posture Task')
+        self.task_posture.add(self.posture_feature.name)
         # featurePosition.selec.value = toFlags((6,24))
         gainPosition = GainAdaptive('gainPosition')
         gainPosition.set(0.1,0.1,125e3)
-        gainPosition.gain.value = 0.5
-        #plug(task_posture.error,gainPosition.error)
-        #plug(gainPosition.gain,task_posture.controlGain)
-        task_posture.controlGain.value = 1.0
-        return task_posture.name
+        gainPosition.gain.value = 1
+        plug(self.task_posture.error,gainPosition.error)
+        plug(gainPosition.gain,self.task_posture.controlGain)
+        #self.task_posture.controlGain.value = 1
+        return self.task_posture.name
     
     def defineCollisionAvoidance(self):
         self.collisionAvoidance = sc.SotCollision("sc")
@@ -274,37 +280,20 @@ class SOTInterface:
                 self.status = 'NOT_INITIALIZED'
 
     def startRobot(self):
-        if ((self.status == 'INITIALIZED') | (self.status == 'STOPPED')) :           
+        if ((self.status == 'INITIALIZED') | (self.status == 'STOPPED')) :   
+            self.posture_feature.posture.value = self.robot.device.state.value        
             #plug(self.robot.dynamic.position,self.ps.position)
             #self.ps.setTimeStep (0.01)
             self.status = 'STARTED'
+            time.sleep(0.1)
             self.connectDeviceWithSolver(True) 
            
     def stopRobot(self): 
         self.connectDeviceWithSolver(False) 
         self.status = 'STOPPED'
 
-########## Motion planning with MoveIt! ######################
-#    def planToPosture(self, posture):
-#        print "======Planning to the specified posture using MoveIt!"
-#        robot_object = moveit_commander.RobotCommander()
-#        scene_object = moveit_commander.PlanningSceneInterface()
-#        move_group   = moveit_commander.MoveGroupCommander("manipulator")
-#        print "======The current state of the robot is:"
-#        print robot_object.get_current_state()
-#        print("======Now planning to a specified pose for group %s" % move_group.getName())
-#        desired_pose = geometry_msgs.msg.Pose()
-#        quaternion = tf.transformations.quaternion_from_euler(posture[3], posture[4], posture[5])
-#        desired_pose.position.x = posture[0]
-#        desired_pose.position.y = posture[1]
-#        desired_pose.position.z = posture[2]
-#        desired_pose.orientation.x = quaternion[0]
-#        desired_pose.orientation.y = quaternion[1]
-#        desired_pose.orientation.z = quaternion[2]
-#        desired_pose.orientation.w = quaternion[3]
-#        move_group.set_pose_target(desired_pose)
-#        move_group.set_planner_id("RRTConnectkConfigDefault")
-#        motion_plan = move_group.plan()
+
+
 
 
 ############ Trajectory Handler Tools#########################         
@@ -327,7 +316,7 @@ class SOTInterface:
                 j = j+1
         return temp
 
-        
+    '''   
     def _executeTrajectory(self,destination,scenario):
         self.ps.resetPath()
         self.ps.setTimeStep (0.001)
@@ -355,7 +344,7 @@ class SOTInterface:
         self.connectDeviceWithSolver(True)
         plug(self.ps.l_wrist_roll_joint,self.task_pose_metakine.featureDes.position)
         #self.ps.l_wrist_roll_joint.recompute(self.ps.l_wrist_roll_joint.time)
-        
+      ''' 
 '''        
 from dynamic_graph import plug
 

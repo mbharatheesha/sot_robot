@@ -124,6 +124,8 @@ private:
 
     std::vector<double> error_raw;
     std::vector<double> error;
+    std::vector<double> error_vel_last;
+    std::vector<double> error_vel_sum;
 
     // Controller Parameters
     int loop_count_;
@@ -157,4 +159,3 @@ private:
 }
 
 #endif
-
