@@ -19,11 +19,13 @@ from dynamic_graph.entity import PyEntityFactoryClass
 
 import math
 import time
+import os
+import numpy as np
+import numpy.matlib as npmatlib
 
 
 import xml.etree.ElementTree as ET
-file = '/home/nemogiftsun/RobotSoftware/laas/devel/ros/src/sot_robot/src/rqt_rpc/rpc_config.xml'
-#file = '/home/nemogiftsun/laasinstall/devel/ros/src/sot_robot/src/rqt_rpc/rpc_config.xml'
+file = os.environ['DEVEL_DIR']+'src/sot_robot/src/rqt_rpc/rpc_config.xml'
 
 #usage
 '''
@@ -189,12 +191,12 @@ class SOTInterface:
         self.task_posture=Task('Posture Task')
         self.task_posture.add(self.posture_feature.name)
         # featurePosition.selec.value = toFlags((6,24))
-        gainPosition = GainAdaptive('gainPosition')
-        gainPosition.set(0.1,0.1,125e3)
-        gainPosition.gain.value = 1
-        plug(self.task_posture.error,gainPosition.error)
-        plug(gainPosition.gain,self.task_posture.controlGain)
-        #self.task_posture.controlGain.value = 1
+        #gainPosition = GainAdaptive('gainPosition')
+        #gainPosition.set(0.1,0.1,125e3)
+        #gainPosition.gain.value = 1
+        #plug(self.task_posture.error,gainPosition.error)
+        #plug(gainPosition.gain,self.task_posture.controlGain)
+        self.task_posture.controlGain.value = 1
         return self.task_posture.name
     
     def defineCollisionAvoidance(self):
@@ -265,7 +267,14 @@ class SOTInterface:
         #plug(self.ps.configuration,self.posture_feature.posture)         
         #self.ps.start()        
         
-        
+    def followTrajectoryThroughPosture(self):
+        angle_range = np.linspace(-math.pi/2.0, math.pi/2.0,100);
+        for idx in range(0, angle_range.shape[0]):
+            angle = np.sin(angle_range[idx])
+            joint_posture = (angle,) * self.dimension
+            self.setRobotPosture(joint_posture)
+            time.sleep(0.03)
+
     # robot control procedures    
     def initializeRobot(self):
         self.connectDeviceWithSolver(False)

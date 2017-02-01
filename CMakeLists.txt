@@ -8,7 +8,7 @@ set(ROS_BUILD_TYPE RelWithDebInfo)
 
 project(sot_robot)
 
-find_package(catkin REQUIRED COMPONENTS controller_interface controller_manager hardware_interface realtime_tools roscpp rospy urdf std_msgs message_generation std_srvs geometry_msgs sensor_msgs control_msgs tf rospy gazebo_ros_control xacro urdf)
+find_package(catkin REQUIRED COMPONENTS controller_interface controller_manager hardware_interface realtime_tools roscpp rospy urdf std_msgs message_generation std_srvs geometry_msgs sensor_msgs control_msgs tf rospy gazebo_ros_control xacro urdf atf_core)
 
 find_package(Boost REQUIRED COMPONENTS program_options)
 
@@ -122,3 +122,6 @@ install(PROGRAMS
 message(path ${CMAKE_PREFIX_PATH})
 
 ADD_SUBDIRECTORY(src)
+
+####### Tests #######
+atf_test()

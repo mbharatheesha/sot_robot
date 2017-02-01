@@ -1,0 +1,12 @@
+testblock_3s:
+  time:
+    - groundtruth: 3
+      groundtruth_epsilon: 0.5
+testblock_5s:
+  time:
+    - groundtruth: 5
+      groundtruth_epsilon: 0.5
+testblock_8s:
+  time:
+    - groundtruth: 8
+      groundtruth_epsilon: 0.5
