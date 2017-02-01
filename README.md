@@ -23,6 +23,7 @@ steps:
     - ros-indigo-pr2-controller-interface
     - ros-indigo-pr2-controller-manager
     - ros-indigo-control-toolbox
+    - ros-indigo-ur-modern-driver
     - git
     - gfortran
     - libblas-dev
