@@ -334,7 +334,6 @@ void RobotControllerPlugin::readControl(const ros::Time& time,const ros::Duratio
     	if(urdf_joints[i]->type == urdf::Joint::REVOLUTE)
         {
           angles::shortest_angular_distance_with_limits(joint_positionsOUT_[i], joints_[i].getPosition(), urdf_joints[i]->limits->lower, urdf_joints[i]->limits->upper,error[i]);
-
         }
         else if(urdf_joints[i]->type == urdf::Joint::CONTINUOUS)
         {

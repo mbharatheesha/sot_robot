@@ -191,12 +191,13 @@ class SOTInterface:
         self.task_posture=Task('Posture Task')
         self.task_posture.add(self.posture_feature.name)
         # featurePosition.selec.value = toFlags((6,24))
-        #gainPosition = GainAdaptive('gainPosition')
+        gainPosition = GainAdaptive('gainPosition')
         #gainPosition.set(0.1,0.1,125e3)
-        #gainPosition.gain.value = 1
-        #plug(self.task_posture.error,gainPosition.error)
-        #plug(gainPosition.gain,self.task_posture.controlGain)
-        self.task_posture.controlGain.value = 1
+        #gainPosition.gain.value = 0.2
+        plug(self.task_posture.error,gainPosition.error)
+        plug(gainPosition.gain,self.task_posture.controlGain)
+        gainPosition.setConstant(8.0)
+        #self.task_posture.controlGain.value = 0.7
         return self.task_posture.name
     
     def defineCollisionAvoidance(self):
@@ -264,13 +265,22 @@ class SOTInterface:
         #hpp_config = self._converttohpp(posture)  
         #self.ps.addWaypoint(tuple(hpp_config))
         #self.ps.configuration.recompute(self.ps.configuration.time)
-        #plug(self.ps.configuration,self.posture_feature.posture)         
-        #self.ps.start()        
+        #plug(self.ps.configuration,self.posture_feature.posture)
+        #self.ps.start()
+
+    def updateRobotPosture(self,increment):
+        #Get the current posture
+        posture = self.posture_feature.posture.value
+        #Prepare the increment tuple
+        increment_posture = (increment,) * self.dimension
+        new_posture = posture + increment_posture
+        self.setRobotPosture(new_posture)
         
     def followTrajectoryThroughPosture(self):
-        angle_range = np.linspace(-math.pi/2.0, math.pi/2.0,100);
+        angle_range = np.linspace(-math.pi/2.0,math.pi/2.0, 100);
         for idx in range(0, angle_range.shape[0]):
-            angle = np.sin(angle_range[idx])
+            #angle = np.sin(angle_range[idx])
+            angle = angle_range[idx]
             joint_posture = (angle,) * self.dimension
             self.setRobotPosture(joint_posture)
             time.sleep(0.03)
