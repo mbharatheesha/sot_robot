@@ -1,6 +1,38 @@
 <?xml version="1.0"?>
 <launch>
+	<arg name="limited" default="false"/>
+	<arg name="paused" default="false"/>
 
+	<!-- Robot state publisher-->
+	<!--node pkg="robot_state_publisher" type="robot_state_publisher" name="tom_state_publisher">
+	<param name="publish_frequency" type="double" value="50.0" />
+	<param name="tf_prefix" type="string" value="" />
+	</node-->
+
+	<!-- send ur urdf to param server -->
+	<include file="$(find sot_robot)/launch/ur/upload_ur.launch" />
+	  <arg name="min_payload"  default="0.0"/>
+	  <arg name="max_payload"  default="3.0"/>
+	  <arg name="prefix" default="" />  
+	  <arg name="max_velocity" default="10.0"/> <!-- [rad/s] -->
+	  <arg name="base_frame" default="$(arg prefix)base" />
+	  <arg name="tool_frame" default="$(arg prefix)tool0_controller" />
+          <arg name="launch_prefix" value="" />
+
+
+	 <!-- Load hardware interface -->
+	  <node name="ur_hardware_interface" pkg="ur_modern_driver" type="ur_driver" args="'localhost' '50001'" output="screen" launch-prefix="$(arg launch_prefix)">
+	    <param name="min_payload" type="double" value="$(arg min_payload)"/>
+	    <param name="max_payload" type="double" value="$(arg max_payload)"/>
+	    <param name="max_velocity" type="double" value="$(arg max_velocity)"/>
+	    <param name="use_ros_control" type="bool" value="True"/>
+	    <param name="servoj_gain" type="double" value="750" />
+	    <param name="prefix" value="$(arg prefix)" />
+	    <param name="base_frame" type="str" value="$(arg base_frame)"/>
+	    <param name="tool_frame" type="str" value="$(arg tool_frame)"/>
+	</node>
+
+  <!-- Load controller settings -->
     <rosparam file="$(find sot_robot)/robot/ur_sot_controller.yaml" command="load"/>
 
     <node pkg="controller_manager" type="spawner" args="sot_robot" name="robot_sot_controller_spawner" />

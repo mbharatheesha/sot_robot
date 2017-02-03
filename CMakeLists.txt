@@ -1,5 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
+
 SET(CXX_DISABLE_WERROR TRUE)
 INCLUDE(cmake/base.cmake)
 INCLUDE(cmake/cpack.cmake)
@@ -126,7 +127,6 @@ ADD_SUBDIRECTORY(src)
 ####### Tests #######
 atf_test()
 
-
 install(DIRECTORY test_generated
    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
@@ -135,6 +135,6 @@ install(DIRECTORY config
    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
-install(DIRECTORY script
+install(DIRECTORY scripts
    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )

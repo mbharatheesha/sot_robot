@@ -4,7 +4,7 @@ robot_config_path: config/robots                                    # Folder whi
 robot_env_config_path: config/robot_envs                            # Folder which contains the robot_env_config files
 repetitions: 1                                                      # Number of repetitions per test
 
-app_executable: script/atf_test.py                                         # Name of the application's executable file
+app_executable: atf_test.py                                         # Name of the application's executable file
 additional_launch_file: launch/launch_all_atf.launch                                            # Path of the additional launch file
 
 bagfile_output: /tmp/sot_test/data/                                 # Folder for bagfile output
