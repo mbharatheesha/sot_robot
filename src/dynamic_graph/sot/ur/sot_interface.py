@@ -196,7 +196,7 @@ class SOTInterface:
         #gainPosition.gain.value = 0.2
         plug(self.task_posture.error,gainPosition.error)
         plug(gainPosition.gain,self.task_posture.controlGain)
-        gainPosition.setConstant(8.0)
+        gainPosition.setConstant(2.0)
         #self.task_posture.controlGain.value = 0.7
         return self.task_posture.name
 
@@ -299,6 +299,7 @@ class SOTInterface:
                 self.pushBasicTasks()
                 #self.ps = PathSampler ('ps')
                 #self.ps.createJointReference('l_wrist_roll_joint')
+
                 #self.ps.loadRobotModel ('sot_robot', 'planar', 'Ur5_sot')                
                 self.status = 'INITIALIZED'
             except ValueError:

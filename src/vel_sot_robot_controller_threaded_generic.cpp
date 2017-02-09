@@ -101,32 +101,61 @@ void sampleAndHold(RobotControllerPlugin *actl) {
     // Wait the start flag
     boost::unique_lock<boost::mutex> lock(wait_start);
     cond2.wait(lock);
-	
+    bool initSotController = true;
     // Go go go !!!
     while (true) {
+        // Fugly fix for reading the current robot state during
+        // SOT controller initialization.
+        if (initSotController)
         {
-            boost::mutex::scoped_lock lock(rmut);
-            deviceIn = actl->holdIn();
+             {
+                boost::mutex::scoped_lock lock(rmut);
+                deviceIn = actl->holdIn();
+            }
+            actl->device().nominalSetSensors(deviceIn);
+            try {
+                LOG_TRACE("");
+                actl->device().getControl(deviceOut);
+                LOG_TRACE("");
+            }
+            catch (dynamicgraph::sot::ExceptionAbstract &err) {
+                LOG_TRACE(err.getStringMessage());
+                throw err;
+            }
+            //actl->device().getControl(deviceOut);
+            {
+                boost::mutex::scoped_lock lock(wmut);
+                actl->holdOut() = deviceOut;
+            }
+            cond3.notify_all();
+            //usleep(20000);
+            initSotController = false;
         }
-        actl->device().nominalSetSensors(deviceIn);
-        try {
-            LOG_TRACE("");
-            actl->device().getControl(deviceOut);
-            LOG_TRACE("");
-        }
-        catch (dynamicgraph::sot::ExceptionAbstract &err) {
-            LOG_TRACE(err.getStringMessage());
-            throw err;
-        }
-        //actl->device().getControl(deviceOut);
+        else
         {
-            boost::mutex::scoped_lock lock(wmut);
-            actl->holdOut() = deviceOut;
+            {
+                boost::mutex::scoped_lock lock(rmut);
+                deviceIn = actl->holdIn();
+            }
+            //actl->device().nominalSetSensors(deviceIn);
+            try {
+                LOG_TRACE("");
+                actl->device().getControl(deviceOut);
+                LOG_TRACE("");
+            }
+            catch (dynamicgraph::sot::ExceptionAbstract &err) {
+                LOG_TRACE(err.getStringMessage());
+                throw err;
+            }
+            //actl->device().getControl(deviceOut);
+            {
+                boost::mutex::scoped_lock lock(wmut);
+                actl->holdOut() = deviceOut;
+            }
+            cond3.notify_all();
+            //usleep(20000);
         }
-        cond3.notify_all();
-        usleep(20000);
-        }
-    
+    }
 }
 
 
@@ -343,9 +372,7 @@ void RobotControllerPlugin::readControl(const ros::Time& time,const ros::Duratio
         {
           error[i] = joints_[i].getPosition() - joint_positionsOUT_[i];
         }
-
-        joints_[i].setCommand(pids_[i].updatePid(error[i], errord, period));
-
+          joints_[i].setCommand(pids_[i].updatePid(angles::normalize_angle(error[i]), errord, period));
         }
 
 /*
