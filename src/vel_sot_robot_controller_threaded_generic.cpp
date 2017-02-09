@@ -369,8 +369,8 @@ void RobotControllerPlugin::readControl(const ros::Time& time,const ros::Duratio
             controller_state_publisher_->msg_.header.stamp = time;
             for (size_t j=0; j<joints_.size(); ++j) {
                 controller_state_publisher_->msg_.desired.positions[j] = joint_positionsOUT_[j];
-                controller_state_publisher_->msg_.actual.positions[j] = joints_[j].getPosition();
-                controller_state_publisher_->msg_.actual.velocities[j] = joints_[j].getVelocity();
+                controller_state_publisher_->msg_.actual.positions[j] = angles::normalize_angle(joints_[j].getPosition());
+                controller_state_publisher_->msg_.actual.velocities[j] = angles::normalize_angle(joints_[j].getVelocity());
                 controller_state_publisher_->msg_.actual.time_from_start= ros::Duration(timeFromStart_);
                 controller_state_publisher_->msg_.error.positions[j] = error[j];
             }

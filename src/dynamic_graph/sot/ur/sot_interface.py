@@ -119,7 +119,7 @@ class SOTInterface:
         self.pushTask(self.jltaskname)
         self.pushTask(self.waisttaskname)
         #self.pushTask(self.task_skinsensor.name)
-        self.pushTask(self.posturetaskname)
+        #self.pushTask(self.posturetaskname)
         #self.connectDeviceWithSolver(False)
 
     def pushTask(self,taskname):
@@ -181,7 +181,7 @@ class SOTInterface:
 
         if (len(posture) != self.dimension):
             posture = self.robot.device.state.value
-        self.posture_feature.posture.value = posture 
+        self.posture_feature.posture.value = self.robot.device.state.value
 
         postureTaskDofs = [True]*(self.robot.dimension)
         for dof,isEnabled in enumerate(postureTaskDofs):
@@ -199,6 +199,12 @@ class SOTInterface:
         gainPosition.setConstant(8.0)
         #self.task_posture.controlGain.value = 0.7
         return self.task_posture.name
+
+    def pushRobotPostureTask(self):
+        posture = self.robot.device.state.value
+        postureTaskName = self.defineRobotPostureTask(posture)
+        self.pushTask(postureTaskName)
+
     
     def defineCollisionAvoidance(self):
         self.collisionAvoidance = sc.SotCollision("sc")
